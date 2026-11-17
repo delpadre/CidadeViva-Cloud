@@ -1,8 +1,14 @@
-"""App mínimo de placeholder do MVP CitizenTech.
-Serve para validar infraestrutura, CI/CD e monitoramento.
-Substitua pelo MVP real mantendo a rota /health."""
 import os
 from flask import Flask, jsonify
+
+# Telemetria para o Application Insights (só liga se houver a connection string).
+if os.getenv("APPLICATIONINSIGHTS_CONNECTION_STRING"):
+    try:
+        from azure.monitor.opentelemetry import configure_azure_monitor
+
+        configure_azure_monitor()
+    except Exception as exc:  # o app nunca deve cair por causa da telemetria
+        print(f"Telemetria desativada: {exc}")
 
 app = Flask(__name__)
 
