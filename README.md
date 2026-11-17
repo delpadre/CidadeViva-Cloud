@@ -1,22 +1,6 @@
-# [NOME DO PRODUTO] — CitizenTech
+# CidadeViva — CitizenTech
 
 > Global Solution FIAP 2026.2 · Engenharia de Software 4º ano · Equipe: [NOMES + RMs]
-
-## Ficha Técnica do MVP
-
-| Campo | Conteúdo |
-|---|---|
-| **Nome do produto** | [preencher] |
-| **Cidadão e território** | [ex.: moradores de X em Y que ...] |
-| **Problema, em uma frase** | [preencher] |
-| **Proposta de valor** | [preencher] |
-| **Arquitetura: componentes** | Azure App Service (Linux) · Azure Key Vault · Application Insights · GitHub Actions · [banco/pipeline de dados · modelo de IA · robô UiPath] |
-| **Fontes de dados** | [fontes públicas/abertas ou dados simulados com justificativa] |
-| **Modelos de IA utilizados** | [OCR/visão, LLM, etc.] |
-| **URL do MVP** | https://citizentech-[GRUPO].azurewebsites.net |
-| **Repositório** | https://github.com/[ORG]/[REPO] |
-| **Indicadores de impacto** | [ex.: tempo economizado, nº de atendimentos] |
-| **ODS conectados** | [ex.: ODS 10, 11] |
 
 ## Arquitetura de produção
 
