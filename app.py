@@ -1,7 +1,5 @@
 import os
-from flask import Flask, jsonify
 
-# Telemetria para o Application Insights (só liga se houver a connection string).
 if os.getenv("APPLICATIONINSIGHTS_CONNECTION_STRING"):
     try:
         from azure.monitor.opentelemetry import configure_azure_monitor
@@ -9,6 +7,8 @@ if os.getenv("APPLICATIONINSIGHTS_CONNECTION_STRING"):
         configure_azure_monitor()
     except Exception as exc:  # o app nunca deve cair por causa da telemetria
         print(f"Telemetria desativada: {exc}")
+
+from flask import Flask, jsonify  # noqa: E402
 
 app = Flask(__name__)
 
