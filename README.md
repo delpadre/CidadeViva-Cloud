@@ -1,57 +1,169 @@
-# CidadeViva — CitizenTech
+# CidadeViva
 
-> Global Solution FIAP 2026.2 · Engenharia de Software 4º ano · Equipe: [NOMES + RMs]
+> **CitizenTech · Global Solution FIAP 2026.2 · Engenharia de Software, 4º ano**
+> Disciplina de produção: *Secure DevOps Tools & Cloud Computing — "CitizenTech no Ar"*
+
+| | |
+|---|---|
+| **MVP no ar** | <https://citizentech-girafas.azurewebsites.net> |
+| **Health check** | <https://citizentech-girafas.azurewebsites.net/health> |
+| **Repositório** | <https://github.com/delpadre/CidadeViva-Cloud> |
+| **Equipe** | [PREENCHER: nome e RM de cada integrante] |
+
+---
+
+## Ficha Técnica do MVP
+
+| Campo | Conteúdo |
+|---|---|
+| **Nome do produto** | CidadeViva |
+| **Cidadão e território** | [PREENCHER: quem é o cidadão e onde vive. Ex.: "moradores de [bairro/cidade] que ..."] |
+| **Problema, em uma frase** | [PREENCHER] |
+| **Proposta de valor** | [PREENCHER: o que o cidadão ganha ao usar o CidadeViva] |
+| **Arquitetura: componentes** | Aplicação web em **Azure App Service** (Linux, B1) · **Azure Key Vault** (segredos) · **Application Insights** (telemetria e alertas) · **GitHub Actions** (CI/CD) · [PREENCHER: dados/pipeline, modelo de IA, robô de RPA, peça física] |
+| **Fontes de dados** | [PREENCHER: fontes abertas/públicas ou dados simulados, com justificativa] |
+| **Modelos de IA utilizados** | [PREENCHER: ex. OCR/visão para documentos, LLM, classificação] |
+| **URL do MVP e repositório** | <https://citizentech-girafas.azurewebsites.net> · <https://github.com/delpadre/CidadeViva-Cloud> |
+| **Indicadores de impacto** | [PREENCHER: ex. tempo economizado por atendimento, nº de pessoas atendidas] |
+| **ODS conectados** | [PREENCHER: ex. ODS 10 e ODS 11, com uma frase explicando a contribuição] |
+
+---
 
 ## Arquitetura de produção
 
 ```mermaid
 flowchart LR
-    U[Cidadão] -->|HTTPS / TLS 1.2| APP[Azure App Service]
-    DEV[Dev] -->|git push main| GH[GitHub Actions]
-    GH -->|build, testes, pip-audit| GH
-    GH -->|deploy| APP
+    U[Cidadão] -->|HTTPS, TLS 1.2| APP[Azure App Service<br/>Linux B1 · East US 2]
+    DEV[Dev: git push main] --> GH[GitHub Actions]
+    GH -->|pytest · pip-audit| GH
+    GH -->|deploy + smoke test /health| APP
     APP -->|Managed Identity| KV[Azure Key Vault]
     APP -->|telemetria| AI[Application Insights]
-    AI -->|alertas 5xx, lentidão, health| AG[Action Group e-mail]
-    APP --> DB[(Banco / dados)]
+    AI -->|4 regras de alerta| AG[Action Group: e-mail da equipe]
+    APP --> DADOS[(Dados do MVP)]
 ```
 
-## Engenharia de produção 
+Todos os recursos ficam no Resource Group `rg-citizentech`, região **East US 2**.
 
-| Pilar | Implementação |
+> **Por que East US 2?** A assinatura Azure for Students tem uma política que só permite criar recursos em North Central US, South Central US, Chile Central, East US 2 e Canada Central (o Brazil South retorna `RequestDisallowedByAzure`). Em produção real, o ideal é Brazil South, por latência e LGPD.
+
+---
+
+## Engenharia de produção
+
+### 1. Deploy
+- URL pública com **HTTPS obrigatório** (*HTTPS Only*), **TLS mínimo 1.2** (inclusive no SCM) e **FTP desabilitado**.
+- Rota `GET /health` (retorna 200), usada pelo smoke test do pipeline, pelo health check do App Service e pelo Availability test.
+- Infraestrutura reproduzível pelo script [`infra/setup-azure.sh`](infra/setup-azure.sh).
+
+### 2. CI/CD (GitHub Actions)
+Workflow [`.github/workflows/ci-cd.yml`](.github/workflows/ci-cd.yml), executado a cada push na `main`:
+
+1. Instala dependências e roda **pytest**.
+2. Audita vulnerabilidades das dependências com **pip-audit**.
+3. Empacota a aplicação.
+4. Faz o **deploy** no App Service (`azure/webapps-deploy`), só se as etapas anteriores passarem.
+5. Executa um **smoke test** em `/health`.
+
+Pull requests rodam apenas build e testes. Análise estática com **CodeQL** ([`codeql.yml`](.github/workflows/codeql.yml)) e **Dependabot** ([`dependabot.yml`](.github/dependabot.yml)) completam a esteira.
+
+### 3. Segurança
+| Controle | Como foi feito |
 |---|---|
-| Deploy | App Service Linux B1, HTTPS only, TLS ≥ 1.2, FTP desabilitado, health check em `/health` |
-| CI/CD | `.github/workflows/ci-cd.yml`: testes → `pip-audit` → deploy → smoke test, a cada push na `main` |
-| Segurança | Segredos no GitHub Secrets e Azure Key Vault (referência `@Microsoft.KeyVault`), Managed Identity, RBAC, CodeQL, Dependabot, secret scanning |
-| Monitoramento | Application Insights + 3 alertas (5xx, lentidão, health check) com e-mail para a equipe + availability test |
-| Custo | Ver PDF de entrega / Azure Pricing Calculator |
+| Segredos fora do código | Key Vault (`kv-citizentech-girafas`) com referência `@Microsoft.KeyVault(...)` nas variáveis de ambiente do App Service; credenciais de deploy somente em *GitHub Secrets* |
+| Sem senha no app | **Managed Identity** do App Service com o papel mínimo *Key Vault Secrets User* |
+| Acesso por papéis (RBAC) | Proprietário no grupo de recursos; *Secrets Officer* (gestão) e *Secrets User* (app) no Key Vault |
+| Transporte seguro | HTTPS only, TLS 1.2, FTP desabilitado |
+| Código e dependências | CodeQL, Dependabot (alertas e atualizações de segurança), `pip-audit` |
+| Repositório | `.gitignore` bloqueia `.env` e `publish-profile.xml`; `.env.example` documenta as variáveis sem valores |
+
+**Limitação conhecida:** a autenticação básica SCM está habilitada porque o deploy usa *publish profile*. Uma melhoria futura é migrar para login federado (OIDC), que dispensa essa credencial.
+
+### 4. Monitoramento
+**Application Insights** (`ai-citizentech`) recebe requisições, falhas e exceções. Quatro regras de alerta notificam a equipe por e-mail (Action Group `ag-citizentech-equipe`):
+
+| Alerta | Condição |
+|---|---|
+| `alerta-http-5xx` | Mais de 3 erros 5xx em 15 min |
+| `alerta-lentidao` | Tempo médio de resposta acima de 3 s |
+| `alerta-health-check` | Health check abaixo de 100% |
+| `ping-health-ai-citizentech` | Availability test com falha em 2 ou mais locais |
+
+Um **Availability test** (`ping-health`) verifica `/health` a cada 5 minutos, de 5 regiões.
+
+### 5. Custo (estimativa mensal, East US 2)
+| Recurso | US$/mês |
+|---|---|
+| App Service Linux B1 | 12,41 |
+| Azure Monitor / Application Insights (1 GB/dia) | 1,50 |
+| Key Vault (10 mil operações) | 0,03 |
+| **Total** | **13,94** (≈ 167,28/ano) |
+
+---
 
 ## LGPD e dados pessoais
 
-- **Dados coletados:** [listar, ex.: e-mail, endereço]
-- **Finalidade:** [por que cada dado é necessário]
-- **Minimização:** só coletamos o estritamente necessário; sem dados pessoais reais em testes.
-- **Armazenamento/proteção:** [onde, criptografia, retenção]
-- **Direitos do titular:** [como solicitar exclusão/correção]
+- **Dados coletados:** [PREENCHER: liste cada dado pessoal que o CidadeViva coleta]
+- **Finalidade:** [PREENCHER: por que cada dado é necessário]
+- **Minimização:** coletamos apenas o estritamente necessário; testes não usam dados pessoais reais.
+- **Armazenamento e proteção:** segredos no Key Vault; tráfego somente por HTTPS; [PREENCHER: onde ficam os dados do MVP, criptografia e retenção].
+- **Direitos do titular:** [PREENCHER: como o cidadão pede correção ou exclusão dos dados].
+
+---
 
 ## Como rodar localmente
 
 ```bash
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env     # preencha localmente
+git clone https://github.com/delpadre/CidadeViva-Cloud.git
+cd CidadeViva-Cloud
+python -m venv .venv && source .venv/bin/activate    # Windows: .venv\Scripts\activate
+pip install -r requirements.txt pytest
+cp .env.example .env                                  # preencha localmente; nunca faça commit
 pytest
-python -m uvicorn main:app --reload   # ajuste ao seu entrypoint
+python app.py                                         # http://localhost:8000
 ```
 
-## Como publicar (infraestrutura)
+## Como publicar a infraestrutura
 
 ```bash
 az login
-GRUPO=g12 ALERT_EMAIL=voce@fiap.com.br bash infra/setup-azure.sh
+GRUPO=girafas ALERT_EMAIL=seu@email.com bash infra/setup-azure.sh
 ```
-Depois, cadastre os secrets `AZURE_APP_NAME` e `AZURE_PUBLISH_PROFILE` em *GitHub → Settings → Secrets and variables → Actions*. O app precisa expor `GET /health` retornando 200.
+
+Depois cadastre em *GitHub → Settings → Secrets and variables → Actions*:
+
+| Secret | Valor |
+|---|---|
+| `AZURE_APP_NAME` | nome do app (ex. `citizentech-girafas`) |
+| `AZURE_PUBLISH_PROFILE` | conteúdo do `publish-profile.xml` gerado pelo script (depois apague o arquivo) |
+
+Cada push na `main` publica automaticamente.
+
+---
+
+## Estrutura do repositório
+
+```
+.
+├── app.py                  # aplicação (rotas, /health e telemetria)
+├── requirements.txt
+├── pytest.ini
+├── tests/                  # testes automatizados
+├── infra/setup-azure.sh    # infraestrutura como script (az cli)
+├── .github/
+│   ├── workflows/ci-cd.yml # build, testes, deploy e smoke test
+│   ├── workflows/codeql.yml
+│   └── dependabot.yml
+├── .env.example
+└── .gitignore
+```
 
 ## Documentação por disciplina
 
-[links para as pastas/READMEs de Dados, Visão, RPA, Maker Lab, etc.]
+| Disciplina | Documentação |
+|---|---|
+| Dados | [PREENCHER: link] |
+| Visão computacional | [PREENCHER: link] |
+| RPA | [PREENCHER: link] |
+| Startup / BI | [PREENCHER: link] |
+| Maker Lab | [PREENCHER: link] |
