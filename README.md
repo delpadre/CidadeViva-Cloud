@@ -8,16 +8,10 @@
 | Campo | Conteúdo |
 |---|---|
 | **Nome do produto** | CidadeViva |
-| **Cidadão e território** | [PREENCHER: quem usa e onde. Ex.: moradores de [cidade/bairro] que veem um problema na rua] |
-| **Problema, em uma frase** | [PREENCHER] |
+| **Cidadão e território** | Moradores do Brasil que veem problemas do espaço público |
+| **Problema, em uma frase** | problemas do espaço público (buraco, bueiro entupido, lixo, calçada quebrada, semáforo com defeito) em 3 passos, sem cadastro, e encaminha cada solicitação à prefeitura ou concessionária responsável. |
 | **Proposta de valor** | Reportar um problema urbano (buraco, bueiro, lixo, calçada, semáforo) em 3 passos, sem cadastro, e acompanhar pelo código recebido |
-| **Arquitetura: componentes** | Azure App Service · Key Vault · Application Insights · GitHub Actions · [PREENCHER: dados, IA/visão, RPA, peça física] |
-| **Fontes de dados** | [PREENCHER: ex. relatos dos cidadãos, CEP por API pública] |
-| **Modelos de IA utilizados** | [PREENCHER: ex. leitura do endereço pela conta, se for IA/visão] |
 | **URL do MVP e repositório** | <https://citizentech-girafas.azurewebsites.net> · repositório acima |
-| **Indicadores de impacto** | [PREENCHER: ex. tempo até a resolução, nº de relatos atendidos] |
-| **ODS conectados** | [PREENCHER: ex. ODS 11, com uma frase de justificativa] |
-
 | | |
 |---|---|
 | **MVP no ar** | <https://citizentech-girafas.azurewebsites.net> |
