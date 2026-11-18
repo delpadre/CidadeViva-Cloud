@@ -3,6 +3,21 @@
 > **CitizenTech · Global Solution FIAP 2026.2 · Engenharia de Software, 4º ano**
 > Disciplina de produção: *Secure DevOps Tools & Cloud Computing — "CitizenTech no Ar"*
 
+## Ficha Técnica do MVP
+
+| Campo | Conteúdo |
+|---|---|
+| **Nome do produto** | CidadeViva |
+| **Cidadão e território** | [PREENCHER: quem usa e onde. Ex.: moradores de [cidade/bairro] que veem um problema na rua] |
+| **Problema, em uma frase** | [PREENCHER] |
+| **Proposta de valor** | Reportar um problema urbano (buraco, bueiro, lixo, calçada, semáforo) em 3 passos, sem cadastro, e acompanhar pelo código recebido |
+| **Arquitetura: componentes** | Azure App Service · Key Vault · Application Insights · GitHub Actions · [PREENCHER: dados, IA/visão, RPA, peça física] |
+| **Fontes de dados** | [PREENCHER: ex. relatos dos cidadãos, CEP por API pública] |
+| **Modelos de IA utilizados** | [PREENCHER: ex. leitura do endereço pela conta, se for IA/visão] |
+| **URL do MVP e repositório** | <https://citizentech-girafas.azurewebsites.net> · repositório acima |
+| **Indicadores de impacto** | [PREENCHER: ex. tempo até a resolução, nº de relatos atendidos] |
+| **ODS conectados** | [PREENCHER: ex. ODS 11, com uma frase de justificativa] |
+
 | | |
 |---|---|
 | **MVP no ar** | <https://citizentech-girafas.azurewebsites.net> |
