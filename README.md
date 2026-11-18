@@ -12,23 +12,6 @@
 
 ---
 
-## Ficha Técnica do MVP
-
-| Campo | Conteúdo |
-|---|---|
-| **Nome do produto** | CidadeViva |
-| **Cidadão e território** | [PREENCHER: quem é o cidadão e onde vive. Ex.: "moradores de [bairro/cidade] que ..."] |
-| **Problema, em uma frase** | [PREENCHER] |
-| **Proposta de valor** | [PREENCHER: o que o cidadão ganha ao usar o CidadeViva] |
-| **Arquitetura: componentes** | Aplicação web em **Azure App Service** (Linux, B1) · **Azure Key Vault** (segredos) · **Application Insights** (telemetria e alertas) · **GitHub Actions** (CI/CD) · [PREENCHER: dados/pipeline, modelo de IA, robô de RPA, peça física] |
-| **Fontes de dados** | [PREENCHER: fontes abertas/públicas ou dados simulados, com justificativa] |
-| **Modelos de IA utilizados** | [PREENCHER: ex. OCR/visão para documentos, LLM, classificação] |
-| **URL do MVP e repositório** | <https://citizentech-girafas.azurewebsites.net> · <https://github.com/delpadre/CidadeViva-Cloud> |
-| **Indicadores de impacto** | [PREENCHER: ex. tempo economizado por atendimento, nº de pessoas atendidas] |
-| **ODS conectados** | [PREENCHER: ex. ODS 10 e ODS 11, com uma frase explicando a contribuição] |
-
----
-
 ## Arquitetura de produção
 
 ```mermaid
@@ -158,12 +141,3 @@ Cada push na `main` publica automaticamente.
 └── .gitignore
 ```
 
-## Documentação por disciplina
-
-| Disciplina | Documentação |
-|---|---|
-| Dados | [PREENCHER: link] |
-| Visão computacional | [PREENCHER: link] |
-| RPA | [PREENCHER: link] |
-| Startup / BI | [PREENCHER: link] |
-| Maker Lab | [PREENCHER: link] |
