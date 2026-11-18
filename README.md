@@ -8,7 +8,9 @@
 | **MVP no ar** | <https://citizentech-girafas.azurewebsites.net> |
 | **Health check** | <https://citizentech-girafas.azurewebsites.net/health> |
 | **Repositório** | <https://github.com/delpadre/CidadeViva-Cloud> |
-| **Equipe** | [PREENCHER: nome e RM de cada integrante] |
+| **Equipe** | Rafael Jorge Del Padre - RM552765
+Rafael De Almeida - RM554019 
+Giovanna Franco - RM553701  |
 
 ---
 
