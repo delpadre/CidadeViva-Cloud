@@ -85,11 +85,11 @@ Um **Availability test** (`ping-health`) verifica `/health` a cada 5 minutos, de
 
 ## LGPD e dados pessoais
 
-- **Dados coletados:** [PREENCHER: liste cada dado pessoal que o CidadeViva coleta]
-- **Finalidade:** [PREENCHER: por que cada dado é necessário]
-- **Minimização:** coletamos apenas o estritamente necessário; testes não usam dados pessoais reais.
-- **Armazenamento e proteção:** segredos no Key Vault; tráfego somente por HTTPS; [PREENCHER: onde ficam os dados do MVP, criptografia e retenção].
-- **Direitos do titular:** [PREENCHER: como o cidadão pede correção ou exclusão dos dados].
+- **Dados coletados:** o CidadeViva **não pede nome, e-mail nem telefone**. Coleta apenas os dados do relato: localização do problema (coordenadas do dispositivo, se o cidadão autorizar, ou o endereço digitado: CEP, rua, número aproximado, bairro, cidade e UF), o tipo e a descrição do problema, e um código de acompanhamento gerado pelo sistema.
+- **Finalidade:** o endereço ou a localização servem para encaminhar o problema ao local certo; o tipo e a descrição, para classificar e priorizar o atendimento; o código, para o cidadão acompanhar o relato sem se identificar.
+- **Minimização:** não há cadastro nem identificação do cidadão. O endereço informado é aproximado (número aproximado) e a geolocalização só é usada quando o cidadão clica em "Usar a minha localização". Os testes não usam dados pessoais reais.
+- **Armazenamento e proteção:** o tráfego usa somente HTTPS (TLS 1.2); a chave administrativa (`ADMIN_KEY`) fica protegida e não está no código; o acesso à área do atendente exige essa chave. Os dados ficam no armazenamento do próprio App Service (`DATA_DIR`), criptografado em repouso pela plataforma Azure. 
+- **Direitos do titular:** como não há identificação, o cidadão pode pedir a correção ou a exclusão de um relato informando o **código de acompanhamento**. A equipe atende o pedido em prazo razoável e remove o relato do armazenamento.
 
 ---
 
