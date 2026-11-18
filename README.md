@@ -18,7 +18,6 @@
 | **Indicadores de impacto** | [PREENCHER: ex. tempo até a resolução, nº de relatos atendidos] |
 | **ODS conectados** | [PREENCHER: ex. ODS 11, com uma frase de justificativa] |
 
-| | |
 |---|---|
 | **MVP no ar** | <https://citizentech-girafas.azurewebsites.net> |
 | **Health check** | <https://citizentech-girafas.azurewebsites.net/health> |
