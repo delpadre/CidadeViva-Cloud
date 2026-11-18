@@ -12,6 +12,7 @@
 | **Problema, em uma frase** | problemas do espaço público (buraco, bueiro entupido, lixo, calçada quebrada, semáforo com defeito) em 3 passos, sem cadastro, e encaminha cada solicitação à prefeitura ou concessionária responsável. |
 | **Proposta de valor** | Reportar um problema urbano (buraco, bueiro, lixo, calçada, semáforo) em 3 passos, sem cadastro, e acompanhar pelo código recebido |
 | **URL do MVP e repositório** | <https://citizentech-girafas.azurewebsites.net> · repositório acima |
+
 | | |
 |---|---|
 | **MVP no ar** | <https://citizentech-girafas.azurewebsites.net> |
